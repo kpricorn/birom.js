@@ -1,0 +1,16 @@
+body {
+    background: #000;
+    font-family: "Helvetica";
+    overflow: hidden;
+    margin: 0;
+}
+
+p {
+    color: #999;
+}
+
+#field {
+    width: 800px;
+    height: 600px;
+}
+

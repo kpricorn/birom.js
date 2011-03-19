@@ -18,6 +18,11 @@ function BiromClient() {
                 timeout: 120
             });
 
+            self.client.subscribe('/rotate', function(message) {
+                var stone = stones[message.id];
+                stone.rotate(60);
+
+            });
             self.client.subscribe('/move', function(message) {
                 var stone = stones[message.id];
                 //console.debug('move stone: ' + stone.id + ' to ' + message.x + '/' + message.y);
@@ -68,7 +73,9 @@ function BiromClient() {
             });
             stones[i].drag(move, dragger, up);
             stones[i].dblclick(function(event) {
-                this.rotate(60);
+                self.client.publish('/rotate', {
+                      id: this.id
+                });
             });
         }
     };

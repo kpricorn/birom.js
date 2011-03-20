@@ -14,7 +14,7 @@ function BiromClient() {
 
     this.setupBayeuxHandlers = function() {
         $.getJSON("/config.json", function(config) {
-            self.client = new Faye.Client("http://" + window.location.hostname + '/faye', {
+            self.client = new Faye.Client("http://" + window.location.hostname + ':80/faye', {
                 timeout: 120
             });
 

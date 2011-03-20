@@ -10,5 +10,5 @@ process.addListener('uncaughtException', function (err, stack) {
 var Birom = require('./lib/birom');
 
 new Birom({
-  port: 80
+  port: 8000
 });

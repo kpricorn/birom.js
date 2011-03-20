@@ -62,8 +62,16 @@ function BiromClient() {
             , field.path(stone)
             , field.path(stone)
             ];
+
+        var redBirom = field.path(stone);
+        redBirom.attr({
+            fill: '#bf0000'
+            , stroke: '#bf0000'
+            ,"stroke-width": 2
+        });
+        redBirom.translate(450, 250);
         for (var i = 0, ii = stones.length; i < ii; i++) {
-            var color = Raphael.getColor();
+            var color = i%2 == 0 ? '#bfac00' : '#004cbf';
             stones[i].attr({
                 id: i,
                 fill: color,

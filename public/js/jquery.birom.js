@@ -10,9 +10,11 @@ function BiromClient() {
     var snapYPoints = [];
     for (var i = 0; i < 900 / 50; i++) {
         snapXPoints.push(i * 50);
+        snapXPoints.push(i * 50 + 25);
     };
     for (var i = 0; i < 500 / 86; i++) {
         snapYPoints.push(i * 86);
+        snapYPoints.push(i * 86 + 43);
     };
     console.debug(snapXPoints);
     console.debug(snapYPoints);
@@ -30,8 +32,10 @@ function BiromClient() {
             });
 
             self.client.subscribe('/rotate', function(message) {
-                var stone = stones[message.id];
-                stone.rotate(60);
+                var stonePath = stones[message.id];
+                stonePath.rotation = ((stonePath.rotation || 0) + 60) % 360;
+                console.debug(stonePath.rotation);
+                stonePath.rotate(stonePath.rotation, stonePath.getBBox().x + 50, stonePath.getBBox().y + 43);
             });
             self.client.subscribe('/move', function(message) {
                 var stonePath = stones[message.id];
@@ -45,11 +49,14 @@ function BiromClient() {
                 console.debug('Move ' + stonePath.id + ' to:         ' + message.x + '/' + message.y);
                 console.debug('Absolute position: ' + absX + '/' + absY);
                 console.debug('real move:         ' + stonePath.realX + '/' + stonePath.realY);
-                var snapX = Raphael.snapTo(snapXPoints, stonePath.realX, 50);
-                var snapY = Raphael.snapTo(snapYPoints, stonePath.realY, 50);
+                var snapX = Raphael.snapTo(snapXPoints, stonePath.realX);
+                var snapY = Raphael.snapTo(snapYPoints, stonePath.realY);
                 console.debug('Snap to:           ' + snapX + '/' + snapY);
                 if (snapX != absX || snapY != absY) {
-                    stonePath.translate(snapX - absX, snapY - absY);
+                    var newX = snapX - absX;
+                    var newY = snapY - absY;
+                    stonePath.translate(newX, newY);
+                    stonePath.showBBox();
                 }
             });
         });
@@ -93,6 +100,7 @@ function BiromClient() {
             this.ody = undefined;
             this.realX = undefined;
             this.realY = undefined;
+            this.attr({title: this.getBBox().x + " / " + this.getBBox().y});
         };
 
         // Create Field
@@ -101,11 +109,28 @@ function BiromClient() {
         for (var i = 0; i < 10; i++) {
             var color = i%2 == 0 ? '#bfac00' : '#004cbf';
             var stonePath = field.path(stone);
+            stonePath.hideBBox = function() {
+                this.stoneBBox.remove();
+            };
+            stonePath.showBBox = function() {
+                if (this.stoneBBox != undefined) {
+                    this.hideBBox();
+                }
+                this.stoneBBox = field.rect(this.getBBox().x, this.getBBox().y, this.getBBox().width, this.getBBox().height);
+                this.stoneBBox.attr({stroke: "white"});
+            };
+            stonePath.hover(function (event) {
+                this.showBBox();
+            }, function (event) {
+                this.hideBBox();
+            });
+            
             stonePath.attr({
-                fill: color,
-                stroke: color,
-                "stroke-width": 2,
-                cursor: "move"
+                fill: color
+                , stroke: color
+                , "stroke-width": 2
+                , cursor: "move"
+                , title: "0/0"
             });
             stonePath.drag(move, dragger, up);
             stonePath.dblclick(function(event) {

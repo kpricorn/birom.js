@@ -13,10 +13,13 @@ var http = require('http'),
     express = require('express'),
     connect = require('connect');
 
+var port = 8000;
 var app = express.createServer();
 
-
-  //self.bayeux = self.createBayeuxServer();
+var bayeux = new faye.NodeAdapter({
+  mount: '/faye',
+  timeout: 45
+});
 
 app.configure( function(){
 
@@ -31,26 +34,15 @@ app.configure( function(){
             secret: "aoeuaoeuaoeu",
             cookie: { path: '/', httpOnly: true, maxAge: 14400000 }
         })
-    );      
+    );
 });
 
 app.get('/config.json', function(req, res) {
   res.contentType('application/x-javascript');
-  res.send({port: 8080});
+  res.send({port: port});
 });
 
-//self.bayeux.attach(app);
-app.listen(8000);
-sys.log('Server started on PORT ' + 8000);
-
-//Birom.prototype.createBayeuxServer = function() {
-//  var self = this;
-//  
-//  var bayeux = new faye.NodeAdapter({
-//    mount: '/faye',
-//    timeout: 45
-//  });
-//  
-//  return bayeux;
-//};
+bayeux.attach(app);
+app.listen(port);
+sys.log('Server started on PORT ' + port);
 

@@ -29,3 +29,26 @@ p {
     color: #999;
 }
 
+#topbar {
+  position: absolute;
+  width: 100%;
+  top: 0;
+}
+
+#topbar .border {
+  height: 10px;
+  width: 100%;
+  position: absolute;
+  top: 120px;
+  background-image: url(/images/sidebar_top.png);
+}
+
+#topbar .content {
+  background-color: #323232;
+  height: 120px;
+  z-index: 101;
+  position: relative;
+  background-image: url(/images/topbar_bg.png);
+  background-repeat: no-repeat;
+}
+

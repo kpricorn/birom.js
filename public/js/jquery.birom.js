@@ -4,7 +4,7 @@ function BiromClient() {
     }
 
     var self = this;
-    var stones = [];
+    var stonePaths = [];
     var snapXPoints = [];
     var snapYPoints = [];
     for (var i = 0; i < 900 / 50; i++) {
@@ -31,31 +31,31 @@ function BiromClient() {
             });
 
             self.client.subscribe('/rotate', function(message) {
-                var stonePath = stones[message.id];
-                stonePath.rotation = ((stonePath.rotation || 0) + 60) % 360;
-                console.debug(stonePath.rotation);
-                stonePath.rotate(stonePath.rotation, stonePath.getBBox().x + 50, stonePath.getBBox().y + 43);
+                var stone = stonePaths[message.biromId];
+                stone.rotation = ((stone.rotation || 0) + 60) % 360;
+                console.debug(stone.rotation);
+                stone.rotate(stone.rotation, stone.getBBox().x + 50, stone.getBBox().y + 43);
             });
             self.client.subscribe('/move', function(message) {
-                var stonePath = stones[message.id];
-                var absX = stonePath.getBBox().x;
-                var absY = stonePath.getBBox().y;
+                var stone = stonePaths[message.biromId];
+                var absX = stone.getBBox().x;
+                var absY = stone.getBBox().y;
 
-                stonePath.realX = (stonePath.realX || absX) + message.x;
-                stonePath.realY = (stonePath.realY || absY) + message.y;
+                stone.realX = (stone.realX || absX) + message.x;
+                stone.realY = (stone.realY || absY) + message.y;
 
                 console.debug('=====================================================================');
-                console.debug('Move ' + stonePath.id + ' to:         ' + message.x + '/' + message.y);
+                console.debug('Move ' + stone.biromId + ' to:         ' + message.x + '/' + message.y);
                 console.debug('Absolute position: ' + absX + '/' + absY);
-                console.debug('real move:         ' + stonePath.realX + '/' + stonePath.realY);
-                var snapX = Raphael.snapTo(snapXPoints, stonePath.realX);
-                var snapY = Raphael.snapTo(snapYPoints, stonePath.realY);
+                console.debug('real move:         ' + stone.realX + '/' + stone.realY);
+                var snapX = Raphael.snapTo(snapXPoints, stone.realX);
+                var snapY = Raphael.snapTo(snapYPoints, stone.realY);
                 console.debug('Snap to:           ' + snapX + '/' + snapY);
                 if (snapX != absX || snapY != absY) {
                     var newX = snapX - absX;
                     var newY = snapY - absY;
-                    stonePath.translate(newX, newY);
-                    stonePath.showBBox();
+                    stone.translate(newX, newY);
+                    stone.showBBox();
                 }
             });
         });
@@ -99,7 +99,7 @@ function BiromClient() {
             var tx = dx - this.odx || 0;
             var ty = dy - this.ody || 0;
             self.client.publish('/move', {
-                  id: this.id
+                  biromId: this.biromId
                 , x: tx
                 , y: ty
             });
@@ -120,40 +120,43 @@ function BiromClient() {
 
         for (var i = 0; i < 10; i++) {
             var color = i%2 == 0 ? '#bfac00' : '#004cbf';
-            var stonePath = self.field.path(stone);
-            stonePath.hideBBox = function() {
-                this.stoneBBox.remove();
+            var stone = self.field.path(stonePath);
+            stone.hideBBox = function() {
+                this.stonePathBBox.remove();
             };
-            stonePath.showBBox = function() {
-                if (this.stoneBBox != undefined) {
+            stone.showBBox = function() {
+                if (this.stonePathBBox != undefined) {
                     this.hideBBox();
                 }
-                this.stoneBBox = self.field.rect(this.getBBox().x, this.getBBox().y, this.getBBox().width, this.getBBox().height);
-                this.stoneBBox.attr({stroke: "white"});
+                this.stonePathBBox = self.field.rect(this.getBBox().x, this.getBBox().y, this.getBBox().width, this.getBBox().height);
+                this.stonePathBBox.attr({stroke: "white"});
             };
-            stonePath.hover(function (event) {
+            stone.hover(function (event) {
                 this.showBBox();
             }, function (event) {
                 this.hideBBox();
             });
-            
-            stonePath.attr({
+
+            stone.attr({
                 fill: color
                 , stroke: color
                 , "stroke-width": 2
                 , cursor: "move"
                 , title: "0/0"
             });
-            stonePath.drag(move, dragger, up);
-            stonePath.dblclick(function(event) {
+            stone.biromId = i;
+            stone.translate(3*50, 3*86);
+            stone.drag(move, dragger, up);
+            stone.dblclick(function(event) {
                 self.client.publish('/rotate', {
-                      id: this.id
+                      biromId: this.biromId
                 });
             });
-            stones.push(stonePath);
+            stonePaths.push(stone);
+            console.debug(stone);
         }
 
-        var redBirom = self.field.path(stone);
+        var redBirom = self.field.path(stonePath);
         redBirom.attr({
             fill: '#bf0000'
             , stroke: '#bf0000'

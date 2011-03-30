@@ -4,6 +4,7 @@ html(lang="en")
 
     <!-- STYLES -->
     <link rel="stylesheet" href="/css/application.css" type="text/css" charset="utf-8">
+    <link rel="stylesheet" href="/css/application.css" type="text/css" charset="utf-8">
 
     <!-- FONTS -->
     <link href='http://fonts.googleapis.com/css?family=Rock+Salt' rel='stylesheet' type='text/css'>
@@ -12,9 +13,13 @@ html(lang="en")
     title= locals.pageTitle
   
   body!= body
+    #topbar(style="display: block")
+      .content
+      .border
     <!-- SCRIPTS -->
     <script type="text/javascript" src="/faye.js"></script>
     <script type="text/javascript" src="/js/jquery.js"></script>
     <script type="text/javascript" src="/js/raphael.js"></script>
     <script type="text/javascript" src="/js/images.js"></script>
     <script type="text/javascript" src="/js/jquery.birom.js"></script>
+    <script type="text/javascript" src="/js/jquery-ui-1.8.11.custom.min.js"></script>

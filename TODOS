@@ -1,0 +1,14 @@
+- app refactoring (jade, connect)
+- queue up
+- pick peer
+- auth (connect-auth)
+- birom 3d effects (drop shadow and visible edge)
+- persist moves
+- snap only valid moves
+- viewport (zoom, pan)
+- game algorithms: circular path detectiol
+- game algorithms: snapping areas
+- game algorithms: in-memory representation biroms
+- game boards (wooden tables)
+- reusable game rules
+

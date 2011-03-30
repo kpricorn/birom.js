@@ -1,25 +1,20 @@
 !!! 5
 html(lang="en")
-	head
-		<!-- SCRIPTS -->
-		<script src="/lib/jquery-1.5.1.min.js"></script> 
-		
-		<script src="/socket.io/socket.io.js"></script>
+  head
 
-		<script src="/lib/jquery-ui/js/jquery-ui-1.8.9.custom.min.js"></script>
-		
-		<script src="/lib/jquery.jeditable.js"></script> 
-		
-		<script src="/script.js"></script> 
+    <!-- STYLES -->
+    <link rel="stylesheet" href="/css/application.css" type="text/css" charset="utf-8">
 
-		<!-- STYLES -->
-		<link rel="stylesheet" type="text/css" href="/css/style.css" />
-		<link rel="stylesheet" title="cardsize" href="/css/bigcards.css" type="text/css" media="all" />
+    <!-- FONTS -->
+    <link href='http://fonts.googleapis.com/css?family=Rock+Salt' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Covered+By+Your+Grace' rel='stylesheet' type='text/css'>
 
-		<!-- FONTS -->
-		<link href='http://fonts.googleapis.com/css?family=Rock+Salt' rel='stylesheet' type='text/css'>
-		<link href='http://fonts.googleapis.com/css?family=Covered+By+Your+Grace' rel='stylesheet' type='text/css'>
-
-		title= locals.pageTitle
-	
-	body!= body
+    title= locals.pageTitle
+  
+  body!= body
+    <!-- SCRIPTS -->
+    <script type="text/javascript" src="/faye.js"></script>
+    <script type="text/javascript" src="/js/jquery.js"></script>
+    <script type="text/javascript" src="/js/raphael.js"></script>
+    <script type="text/javascript" src="/js/images.js"></script>
+    <script type="text/javascript" src="/js/jquery.birom.js"></script>

@@ -42,6 +42,10 @@ app.get('/config.json', function(req, res) {
   res.send({port: port});
 });
 
+app.get('/', function(req, res) {
+    res.render('home.jade');
+});
+
 bayeux.attach(app);
 app.listen(port);
 sys.log('Server started on PORT ' + port);

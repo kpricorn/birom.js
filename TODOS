@@ -1,4 +1,5 @@
-- app refactoring (jade, connect)
+OPEN
+====
 - queue up
 - pick peer
 - auth (connect-auth)
@@ -12,3 +13,6 @@
 - game boards (wooden tables)
 - reusable game rules
 
+DONE
+====
+- app refactoring (jade, connect)

@@ -5,7 +5,6 @@ function BiromClient() {
 
     var self = this;
     var stones = [];
-    var field;
     var snapXPoints = [];
     var snapYPoints = [];
     for (var i = 0; i < 900 / 50; i++) {
@@ -62,17 +61,30 @@ function BiromClient() {
         });
     };
 
+    this.viewDidResize = function () {
+        console.debug("resize windows (" + $('body').width() + "/" + $(window).height() + ")");
+        var width = $('body').width(),
+                height = $(window).height();
+
+        self.field.setSize(width, height);
+        self.setupGrid();
+    }
+
     this.setupGrid = function() {
-        var grid = field.set();
-        for (var x = 0; x < 900 / 50; x++) {
-            for (var y = 0; y < 500 / 86; y++) {
-                var tile = field.path(gridTile);
+        console.debug('setup grid');
+        if (self.grid != undefined) {
+            self.grid.remove();
+        }
+        self.grid = self.field.set();
+        for (var x = 0; x < self.field.width / 50; x++) {
+            for (var y = 0; y < self.field.height / 86; y++) {
+                var tile = self.field.path(gridTile);
                 tile.translate(x*50, y*86);
-                grid.push(tile);
+                self.grid.push(tile);
             };
         };
-        grid.toBack();
-        grid.attr({
+        self.grid.toBack();
+        self.grid.attr({
             "stroke-width": 0.5
             , stroke: "white"
         });
@@ -104,11 +116,11 @@ function BiromClient() {
         };
 
         // Create Field
-        field = Raphael("field", 900, 500);
+        self.field = Raphael("field", "100%", "100%");
 
         for (var i = 0; i < 10; i++) {
             var color = i%2 == 0 ? '#bfac00' : '#004cbf';
-            var stonePath = field.path(stone);
+            var stonePath = self.field.path(stone);
             stonePath.hideBBox = function() {
                 this.stoneBBox.remove();
             };
@@ -116,7 +128,7 @@ function BiromClient() {
                 if (this.stoneBBox != undefined) {
                     this.hideBBox();
                 }
-                this.stoneBBox = field.rect(this.getBBox().x, this.getBBox().y, this.getBBox().width, this.getBBox().height);
+                this.stoneBBox = self.field.rect(this.getBBox().x, this.getBBox().y, this.getBBox().width, this.getBBox().height);
                 this.stoneBBox.attr({stroke: "white"});
             };
             stonePath.hover(function (event) {
@@ -141,7 +153,7 @@ function BiromClient() {
             stones.push(stonePath);
         }
 
-        var redBirom = field.path(stone);
+        var redBirom = self.field.path(stone);
         redBirom.attr({
             fill: '#bf0000'
             , stroke: '#bf0000'
@@ -156,5 +168,8 @@ function BiromClient() {
 var biromClient;
 jQuery(function() {
     biromClient = new BiromClient();
+    $(window).resize(function() {
+        biromClient.viewDidResize();
+    });
 });
 
